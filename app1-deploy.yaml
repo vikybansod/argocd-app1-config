@@ -5,7 +5,6 @@ metadata:
   labels:
     app: app1
     test: test
-    test1: test1
 spec:
   replicas: 1
   selector:
