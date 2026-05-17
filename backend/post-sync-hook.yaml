@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: post-sync-job
+  namespace: app1-ns
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    restartPolicy: Never
+    spec:
+      containers:
+      - name: post-sync
+        image: busybox
+        command:
+          - sh
+          - -c
+          - |
+            echo "Running post-sync tasks..."
+            # Simulate a post-sync task
+            sleep 10
+            echo "Post-sync tasks completed successfully."
