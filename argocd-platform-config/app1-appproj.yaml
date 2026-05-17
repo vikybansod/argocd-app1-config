@@ -4,16 +4,16 @@ metadata:
   name: app1-project
   namespace: argocd
 spec:
-  description: Application project for app1
+  description: Project for App1 frontend and backend workloads
   sourceRepos:
     - https://github.com/vikybansod/argocd-app1-config.git
   destinations:
-    - server: 'https://kubernetes.default.svc'
-      namespace: app1-*
+    - namespace: app1-*
+      server: https://kubernetes.default.svc
   clusterResourceWhitelist:
     - group: ""
-      kind: namespace
-  namespaceResourceBlacklist:
+      kind: Namespace
+  namespaceResourceWhitelist:
     - group: apps
       kind: Deployment
     - group: ""
@@ -24,9 +24,9 @@ spec:
       kind: Secret
   clusterResourceBlacklist:
     - group: rbac.authorization.k8s.io
-      kind: clusterrole
+      kind: ClusterRole
     - group: rbac.authorization.k8s.io
-      kind: clusterrolebinding
+      kind: ClusterRoleBinding
   roles:
     - name: dev-readonly
       description: Read-only access for developers
@@ -35,7 +35,7 @@ spec:
       groups:
         - app1-devs
     - name: platform-admin
-      description: Platform administrator access
+      description: Full control for platform team
       policies:
         - p, proj:app1-project:platform-admin, applications, *, app1-project/*, allow
       groups:
