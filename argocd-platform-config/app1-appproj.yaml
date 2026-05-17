@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: app1-project
+  namespace: argocd
+spec:
+  description: Application project for app1
+  sourceRepos:
+    - https://github.com/vikybansod/argocd-app1-config.git
+  destinations:
+    - server: 'https://kubernetes.default.svc'
+      namespace: app1-*
+  clusterResourceWhitelist:
+    - group: ""
+      kind: namespace
+  namespaceResourceBlacklist:
+    - group: apps
+      kind: Deployment
+    - group: ""
+      kind: Service
+    - group: ""
+      kind: ConfigMap
+    - group: ""
+      kind: Secret
+  clusterResourceBlacklist:
+    - group: rbac.authorization.k8s.io
+      kind: clusterrole
+    - group: rbac.authorization.k8s.io
+      kind: clusterrolebinding
+  roles:
+    - name: dev-readonly
+      description: Read-only access for developers
+      policies:
+        - p, proj:app1-project:dev-readonly, applications, get, app1-project/*, allow
+      groups:
+        - app1-devs
+    - name: platform-admin
+      description: Platform administrator access
+      policies:
+        - p, proj:app1-project:platform-admin, applications, *, app1-project/*, allow
+      groups:
+        - platform-team
